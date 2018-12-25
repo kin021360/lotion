@@ -80,6 +80,14 @@ export default async function createTendermintProcess({
     opts.p2p.persistentPeers = peers.join(',')
   }
 
+  //// force tendermint index_all_tags & create_empty_blocks_interval for every 5s
+  let cfgPath = join(home, 'config', 'config.toml');
+  let configToml = fs.readFileSync(cfgPath, 'utf8');
+  // configToml = configToml.replace('create_empty_blocks = true', 'create_empty_blocks = false');
+  configToml = configToml.replace('create_empty_blocks_interval = 0', 'create_empty_blocks_interval = 5');
+  configToml = configToml.replace('index_all_tags = false', 'index_all_tags = true');
+  fs.writeFileSync(cfgPath, configToml);
+
   /**
    * overwrite the generated genesis.json with
    * the correct one if specified by the developer.
