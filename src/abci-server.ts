@@ -9,16 +9,30 @@ export interface ABCIServer {
 
 export default function createABCIServer(stateMachine, initialState): any {
   let height = 0
+  let lastAppHash = '';
   let abciServer = createServer({
     info(request) {
-      return {}
+      //// https://tendermint.com/docs/app-dev/abci-spec.html#request-response-messages
+      return {
+        data: 'testabc',
+        // version: '',
+        lastBlockHeight: height,
+        lastBlockAppHash: Buffer.from(lastAppHash, 'hex')
+      }
     },
     deliverTx(request) {
       try {
         let tx = decodeTx(request.tx)
         try {
           stateMachine.transition({ type: 'transaction', data: tx })
-          return {}
+          return {
+            code: 0,
+            data: 'test123',
+            tags: [{
+              key: Buffer.from("key1"),
+              value: Buffer.from('value1')
+            }]
+          }
         } catch (e) {
           return { code: 1, log: e.toString() }
         }
@@ -31,7 +45,10 @@ export default function createABCIServer(stateMachine, initialState): any {
         let tx = decodeTx(request.tx)
         try {
           stateMachine.check(tx)
-          return {}
+          return {
+            code: 0,
+            data: 'ffff'
+          }
         } catch (e) {
           return { code: 1, log: e.toString() }
         }
@@ -63,6 +80,7 @@ export default function createABCIServer(stateMachine, initialState): any {
     },
     commit() {
       let data = stateMachine.commit()
+      lastAppHash = data;
       return { data: Buffer.from(data, 'hex') }
     },
     initChain(request) {
