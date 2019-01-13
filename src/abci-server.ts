@@ -8,7 +8,7 @@ export interface ABCIServer {
 }
 
 export default function createABCIServer(stateMachine, initialState): any {
-  let height = 0
+  let height = 0;
   let lastAppHash = '';
   let abciServer = createServer({
     info(request) {
