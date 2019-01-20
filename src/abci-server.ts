@@ -42,7 +42,7 @@ export default function createABCIServer(
 
     deliverTx(request) {
       try {
-        let tx = decodeTx(request.tx)
+        let tx = { rawTx: request.tx, tx: decodeTx(request.tx) };
         try {
           stateMachine.transition({ type: 'transaction', data: tx })
           return {
@@ -62,7 +62,7 @@ export default function createABCIServer(
     },
     checkTx(request) {
       try {
-        let tx = decodeTx(request.tx)
+        let tx = { rawTx: request.tx, tx: decodeTx(request.tx) };
         try {
           stateMachine.check(tx)
           return {
