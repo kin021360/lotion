@@ -1,5 +1,8 @@
 import djson = require('deterministic-json')
 import vstruct = require('varstruct')
+const crypto = require('crypto');
+const txTagging = require('../../txTaggings/txTagging');
+const TxCounter = require('../../utils/TxCounter');
 
 let createServer = require('abci')
 let { createHash } = require('crypto')
@@ -45,13 +48,13 @@ export default function createABCIServer(
         let tx = { rawTx: request.tx, tx: decodeTx(request.tx) };
         try {
           await stateMachine.transition({ type: 'transaction', data: tx });
+          const txHash = crypto.createHash('sha256').update(request.tx).digest('hex').substr(0, 40);
+          const typeTxcount = TxCounter.get(txHash);
+          TxCounter.delete(txHash);
           return {
             code: 0,
-            data: 'test123',
-            tags: [{
-              key: Buffer.from("key1"),
-              value: Buffer.from('value1')
-            }]
+            // data: 'test123',
+            tags: txTagging(tx, typeTxcount)
           }
         } catch (e) {
           return { code: 1, log: e.toString() }
@@ -149,7 +152,7 @@ function buildInitialInfo(initChainRequest) {
 
 let TxStruct = vstruct([
   { name: 'data', type: vstruct.VarString(vstruct.UInt32BE) },
-  { name: 'nonce', type: vstruct.UInt32BE }
+  { name: 'nonce', type: vstruct.VarString(vstruct.UInt32BE) }
 ])
 
 function decodeTx(txBuffer) {
