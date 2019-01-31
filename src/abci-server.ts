@@ -54,7 +54,7 @@ export default function createABCIServer(
           return {
             code: 0,
             // data: 'test123',
-            tags: txTagging(tx, typeTxcount)
+            tags: txTagging(tx.tx, typeTxcount)
           }
         } catch (e) {
           return { code: 1, log: e.toString() }
