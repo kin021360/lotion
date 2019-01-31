@@ -40,11 +40,11 @@ export default function createABCIServer(
       })
     },
 
-    deliverTx(request) {
+    async deliverTx(request) {
       try {
         let tx = { rawTx: request.tx, tx: decodeTx(request.tx) };
         try {
-          stateMachine.transition({ type: 'transaction', data: tx })
+          await stateMachine.transition({ type: 'transaction', data: tx });
           return {
             code: 0,
             data: 'test123',
@@ -60,15 +60,12 @@ export default function createABCIServer(
         return { code: 1, log: 'Invalid transaction encoding' }
       }
     },
-    checkTx(request) {
+    async checkTx(request) {
       try {
         let tx = { rawTx: request.tx, tx: decodeTx(request.tx) };
         try {
-          stateMachine.check(tx)
-          return {
-            code: 0,
-            data: 'ffff'
-          }
+          await stateMachine.check(tx);
+          return { code: 0, data: '' }
         } catch (e) {
           return { code: 1, log: e.toString() }
         }
