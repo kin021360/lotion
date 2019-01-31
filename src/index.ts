@@ -2,7 +2,7 @@ import buildApplication, {
   BaseApplicationConfig,
   StateMachine,
   Application
-} from 'lotion-state-machine'
+} from '../lotion-state-machine'
 
 import { join } from 'path'
 import { homedir } from 'os'
