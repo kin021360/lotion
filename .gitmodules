@@ -1,0 +1,3 @@
+[submodule "lotion-state-machine"]
+	path = lotion-state-machine
+	url = git@github.com:kin021360/lotion-state-machine.git
