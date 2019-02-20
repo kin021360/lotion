@@ -3,8 +3,7 @@ import vstruct = require('varstruct')
 const crypto = require('crypto');
 const txTagging = require('../../txTaggings/txTagging');
 const TxCounter = require('../../utils/TxCounter');
-const RedisAdapter = require('../../adapters/RedisAdapter');
-const redisAdapter = new RedisAdapter();
+const recentThreadsHelper = require('../../utils/recentThreadsHelper');
 
 let createServer = require('abci')
 let { createHash } = require('crypto')
@@ -52,7 +51,7 @@ export default function createABCIServer(
           await stateMachine.transition({ type: 'transaction', data: tx });
           const txHash = crypto.createHash('sha256').update(request.tx).digest('hex').substr(0, 40);
           const typeTxcount = TxCounter.getThenDelete(txHash);
-          redisAdapter.setKV(txHash, JSON.stringify(tx.tx));
+          recentThreadsHelper(tx.tx, txHash);
           return {
             code: 0,
             // data: 'test123',
