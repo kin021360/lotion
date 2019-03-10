@@ -84,7 +84,7 @@ export default async function createTendermintProcess({
   let cfgPath = join(home, 'config', 'config.toml');
   let configToml = fs.readFileSync(cfgPath, 'utf8');
   // configToml = configToml.replace('create_empty_blocks = true', 'create_empty_blocks = false');
-  configToml = configToml.replace('create_empty_blocks_interval = 0', 'create_empty_blocks_interval = 5');
+  configToml = configToml.replace('create_empty_blocks_interval = 0', 'create_empty_blocks_interval = 60');
   configToml = configToml.replace('index_all_tags = false', 'index_all_tags = true');
   fs.writeFileSync(cfgPath, configToml);
 
