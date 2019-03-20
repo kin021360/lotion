@@ -112,7 +112,7 @@ class LotionApp implements Application {
         this.lotionHome,
         createHash('sha256')
           .update(fs.readFileSync(this.config.genesisPath))
-          .update(fs.readFileSync(this.config.keyPath))
+          // .update(fs.readFileSync(this.config.keyPath))
           .digest('hex')
       )
     } else {
