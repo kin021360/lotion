@@ -21,6 +21,7 @@ interface ApplicationConfig extends BaseApplicationConfig {
   keyPath?: string
   genesisPath?: string
   peers?: Array<string>
+  lotionHome?: string
 }
 
 interface PortMap {
@@ -49,7 +50,7 @@ class LotionApp implements Application {
   private initialState: object
   private logTendermint: boolean
   private home: string
-  private lotionHome: string = join(homedir(), '.lotion', 'networks')
+  private lotionHome: string
 
   public use
   public useTx
@@ -64,6 +65,7 @@ class LotionApp implements Application {
     this.keyPath = config.keyPath
     this.genesisPath = config.genesisPath
     this.peers = config.peers
+    this.lotionHome = join(config.lotionHome || homedir(), '.lotion', 'networks')
 
     this.setHome()
     Object.assign(this, this.application)
