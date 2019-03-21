@@ -1,6 +1,8 @@
 import tendermint = require('tendermint-node')
 import fs = require('fs-extra')
 import { join } from 'path'
+const crypto = require('crypto');
+const signatureHelper = require('../../utils/signatureHelper');
 
 interface PortMap {
   abci: number
@@ -45,7 +47,14 @@ export default async function createTendermintProcess({
    * initialize tendermint's home directory
    * inside <lotion_home>/networks/<id>
    */
-  await tendermint.init(home)
+  await tendermint.init(home);
+  // await tendermint.showNodeId(home).then(r => console.log('tendermint show_node_id: ' + r.stdout));
+
+  const nodeKeyJson = JSON.parse(fs.readFileSync(join(home,'config', 'node_key.json'), 'utf8'));
+  const nodeId = crypto.createHash('sha256')
+      .update(signatureHelper.loadKeyPairFromSecretKey(nodeKeyJson['priv_key']['value']).publicKey)
+      .digest('hex').substr(0, 40);
+  console.log('tendermint node_id: ' + nodeId);
 
   /**
    * disable authenticated encryption for p2p if
