@@ -22,6 +22,7 @@ interface ApplicationConfig extends BaseApplicationConfig {
   genesisPath?: string
   peers?: Array<string>
   lotionHome?: string
+  devMode?: boolean
 }
 
 interface PortMap {
@@ -51,6 +52,7 @@ class LotionApp implements Application {
   private logTendermint: boolean
   private home: string
   private lotionHome: string
+  private devMode: boolean = false
 
   public use
   public useTx
@@ -66,6 +68,7 @@ class LotionApp implements Application {
     this.genesisPath = config.genesisPath
     this.peers = config.peers
     this.lotionHome = join(config.lotionHome || homedir(), '.lotion', 'networks')
+    this.devMode = config.devMode
 
     this.setHome()
     Object.assign(this, this.application)
@@ -114,7 +117,12 @@ class LotionApp implements Application {
           .update(fs.readFileSync(this.config.genesisPath))
           .update(this.config.keyPath ? fs.readFileSync(this.config.keyPath) : '')
           .digest('hex')
-      )
+      );
+
+      //// if devMode=true, clean up lotion home
+      if(this.devMode){
+        fs.removeSync(this.home);
+      }
     } else {
       this.home = join(this.lotionHome, randomBytes(16).toString('hex'))
     }
