@@ -103,16 +103,16 @@ class LotionApp implements Application {
   private setHome() {
     /**
      * if genesis and key paths are provided,
-     * home path is hash(genesisPath + keyPath)
+     * home path is hash(genesisPath + keyPath) or genesisPath only
      *
      * otherwise a random id is generated.
      */
-    if (this.config.genesisPath && this.config.keyPath) {
+    if (this.config.genesisPath) {
       this.home = join(
         this.lotionHome,
         createHash('sha256')
           .update(fs.readFileSync(this.config.genesisPath))
-          // .update(fs.readFileSync(this.config.keyPath))
+          .update(this.config.keyPath ? fs.readFileSync(this.config.keyPath) : '')
           .digest('hex')
       )
     } else {
