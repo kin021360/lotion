@@ -13,6 +13,7 @@
   "dependencies": {
     "@types/node": "^10.5.2",
     "abci": "^4.0.2",
+    "debug": "^4.1.1",
     "deterministic-json": "^1.0.5",
     "fs-extra": "^7.0.1",
     "get-port": "^4.0.0",

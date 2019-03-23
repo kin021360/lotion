@@ -1,5 +1,6 @@
 import djson = require('deterministic-json')
 import vstruct = require('varstruct')
+const debug = require('debug')('lotion-abci:');
 const crypto = require('crypto');
 const txTagging = require('../../txTaggings/txTagging');
 const TxCounter = require('../../utils/TxCounter');
@@ -45,6 +46,7 @@ export default function createABCIServer(
     },
 
     async deliverTx(request) {
+      debug('Enter [DeliverTx] process...');
       try {
         let tx = { rawTx: request.tx, tx: decodeTx(request.tx) };
         try {
@@ -65,6 +67,7 @@ export default function createABCIServer(
       }
     },
     async checkTx(request) {
+      debug('Enter [CheckTx] process...');
       try {
         let tx = { rawTx: request.tx, tx: decodeTx(request.tx) };
         try {
@@ -114,6 +117,7 @@ export default function createABCIServer(
       })
     },
     initChain(request) {
+      debug('New blockchain. Enter [InitChain] process...');
       /**
        * in next abci version, we'll get a timestamp here.
        * height is no longer tracked on info (we want to encourage isomorphic chain/channel code)
