@@ -23,6 +23,8 @@ interface ApplicationConfig extends BaseApplicationConfig {
   peers?: Array<string>
   lotionHome?: string
   devMode?: boolean
+  seeds?: Array<string>
+  seed_mode?: boolean
 }
 
 interface PortMap {
@@ -53,6 +55,8 @@ class LotionApp implements Application {
   private home: string
   private lotionHome: string
   private devMode: boolean = false
+  private seeds: Array<string>
+  private seed_mode: boolean
 
   public use
   public useTx
@@ -69,6 +73,8 @@ class LotionApp implements Application {
     this.peers = config.peers
     this.lotionHome = join(config.lotionHome || homedir(), '.lotion', 'networks')
     this.devMode = config.devMode
+    this.seeds = config.seeds
+    this.seed_mode = config.seed_mode
 
     this.setHome()
     Object.assign(this, this.application)
@@ -149,7 +155,9 @@ class LotionApp implements Application {
       logTendermint: this.logTendermint,
       keyPath: this.keyPath,
       genesisPath: this.genesisPath,
-      peers: this.peers
+      peers: this.peers,
+      seeds: this.seeds,
+      seed_mode: this.seed_mode
     })
 
     this.setGenesis()
