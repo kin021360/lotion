@@ -18,7 +18,6 @@ interface TendermintConfig {
   keyPath?: string
   peers?: Array<string>
   seeds?: Array<string>
-  seed_mode?: boolean
 }
 
 export function genValidator() {
@@ -33,7 +32,6 @@ export default async function createTendermintProcess({
   keyPath,
   peers,
   seeds,
-  seed_mode
 }: TendermintConfig): Promise<any> {
   /**
    * configure server listen addresses for:
@@ -43,7 +41,7 @@ export default async function createTendermintProcess({
    */
   let opts: any = {
     rpc: { laddr: 'tcp://0.0.0.0:' + ports.rpc },
-    p2p: { laddr: 'tcp://0.0.0.0:' + ports.p2p, seed_mode },
+    p2p: { laddr: 'tcp://0.0.0.0:' + ports.p2p },
     proxyApp: 'tcp://127.0.0.1:' + ports.abci
   }
 
