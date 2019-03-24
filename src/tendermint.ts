@@ -17,6 +17,8 @@ interface TendermintConfig {
   genesisPath?: string
   keyPath?: string
   peers?: Array<string>
+  seeds?: Array<string>
+  seed_mode?: boolean
 }
 
 export function genValidator() {
@@ -29,7 +31,9 @@ export default async function createTendermintProcess({
   logTendermint,
   genesisPath,
   keyPath,
-  peers
+  peers,
+  seeds,
+  seed_mode
 }: TendermintConfig): Promise<any> {
   /**
    * configure server listen addresses for:
@@ -39,9 +43,11 @@ export default async function createTendermintProcess({
    */
   let opts: any = {
     rpc: { laddr: 'tcp://0.0.0.0:' + ports.rpc },
-    p2p: { laddr: 'tcp://0.0.0.0:' + ports.p2p },
+    p2p: { laddr: 'tcp://0.0.0.0:' + ports.p2p, seed_mode },
     proxyApp: 'tcp://127.0.0.1:' + ports.abci
   }
+
+  if (seeds.length > 0) opts.p2p.seeds = seeds.join(',');
 
   /**
    * initialize tendermint's home directory
@@ -95,6 +101,7 @@ export default async function createTendermintProcess({
   // configToml = configToml.replace('create_empty_blocks = true', 'create_empty_blocks = false');
   configToml = configToml.replace('create_empty_blocks_interval = 0', 'create_empty_blocks_interval = 60');
   configToml = configToml.replace('index_all_tags = false', 'index_all_tags = true');
+  // configToml = configToml.replace('addr_book_strict = true', 'addr_book_strict = false');
   fs.writeFileSync(cfgPath, configToml);
 
   /**
