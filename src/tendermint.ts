@@ -101,7 +101,7 @@ export default async function createTendermintProcess({
   // configToml = configToml.replace('create_empty_blocks = true', 'create_empty_blocks = false');
   configToml = configToml.replace('create_empty_blocks_interval = 0', 'create_empty_blocks_interval = 60');
   configToml = configToml.replace('index_all_tags = false', 'index_all_tags = true');
-  // configToml = configToml.replace('addr_book_strict = true', 'addr_book_strict = false');
+  configToml = configToml.replace('addr_book_strict = true', 'addr_book_strict = false');
   fs.writeFileSync(cfgPath, configToml);
 
   /**
