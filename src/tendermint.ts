@@ -16,6 +16,7 @@ interface TendermintConfig {
   logTendermint?: boolean
   genesisPath?: string
   keyPath?: string
+  defNodeKeyPath?: string
   peers?: Array<string>
   seeds?: Array<string>
 }
@@ -30,6 +31,7 @@ export default async function createTendermintProcess({
   logTendermint,
   genesisPath,
   keyPath,
+  defNodeKeyPath,
   peers,
   seeds,
 }: TendermintConfig): Promise<any> {
@@ -54,11 +56,16 @@ export default async function createTendermintProcess({
   await tendermint.init(home);
   // await tendermint.showNodeId(home).then(r => console.log('tendermint show_node_id: ' + r.stdout));
 
+  // replace node key
+  if (defNodeKeyPath && fs.existsSync(defNodeKeyPath)) {
+      fs.copySync(defNodeKeyPath, join(home, 'config', 'node_key.json'));
+  }
+
   const nodeKeyJson = JSON.parse(fs.readFileSync(join(home,'config', 'node_key.json'), 'utf8'));
   const nodeId = crypto.createHash('sha256')
       .update(signatureHelper.loadKeyPairFromSecretKey(nodeKeyJson['priv_key']['value']).publicKey)
       .digest('hex').substr(0, 40);
-  console.log('tendermint node_id: ' + nodeId);
+    console.log('\x1b[95m', '\ntendermint node_id:', '\x1b[1m\x1b[93m', nodeId, '\n');
 
   /**
    * disable authenticated encryption for p2p if

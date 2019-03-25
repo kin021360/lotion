@@ -20,6 +20,7 @@ interface ApplicationConfig extends BaseApplicationConfig {
   logTendermint?: boolean
   keyPath?: string
   genesisPath?: string
+  defNodeKeyPath? :string
   peers?: Array<string>
   lotionHome?: string
   devMode?: boolean
@@ -49,6 +50,7 @@ class LotionApp implements Application {
   private peers: Array<string>
   private genesisPath: string
   private keyPath: string
+  private defNodeKeyPath: string
   private initialState: object
   private logTendermint: boolean
   private home: string
@@ -68,6 +70,7 @@ class LotionApp implements Application {
     this.initialState = config.initialState
     this.keyPath = config.keyPath
     this.genesisPath = config.genesisPath
+    this.defNodeKeyPath = config.defNodeKeyPath
     this.peers = config.peers
     this.lotionHome = join(config.lotionHome || homedir(), '.lotion', 'networks')
     this.devMode = config.devMode
@@ -152,6 +155,7 @@ class LotionApp implements Application {
       logTendermint: this.logTendermint,
       keyPath: this.keyPath,
       genesisPath: this.genesisPath,
+      defNodeKeyPath: this.defNodeKeyPath,
       peers: this.peers,
       seeds: this.seeds,
     })
