@@ -113,6 +113,7 @@ export default function createABCIServer(
             context: stateMachine.context()
           })
         )
+        debug('Current block height:', height);
         resolve({ data: Buffer.from(data, 'hex') })
       })
     },
