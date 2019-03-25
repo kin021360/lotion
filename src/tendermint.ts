@@ -65,7 +65,7 @@ export default async function createTendermintProcess({
   const nodeId = crypto.createHash('sha256')
       .update(signatureHelper.loadKeyPairFromSecretKey(nodeKeyJson['priv_key']['value']).publicKey)
       .digest('hex').substr(0, 40);
-    console.log('\x1b[95m', '\ntendermint node_id:', '\x1b[1m\x1b[93m', nodeId, '\n');
+  console.log('\x1b[34m', 'tendermint node_id:', '\x1b[34m\x1b[1m', nodeId, '\n');
 
   /**
    * disable authenticated encryption for p2p if
