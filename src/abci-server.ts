@@ -60,9 +60,11 @@ export default function createABCIServer(
             tags: txTagging(tx.tx, typeTxcount)
           }
         } catch (e) {
+          debug('[DeliverTx] failed:', e.toString());
           return { code: 1, log: e.toString() }
         }
       } catch (e) {
+        debug('[DeliverTx] failed: Invalid transaction encoding');
         return { code: 1, log: 'Invalid transaction encoding' }
       }
     },
@@ -74,9 +76,11 @@ export default function createABCIServer(
           await stateMachine.check(tx);
           return { code: 0, data: '' }
         } catch (e) {
+          debug('[CheckTx] failed:', e.toString());
           return { code: 1, log: e.toString() }
         }
       } catch (e) {
+        debug('[CheckTx] failed: Invalid transaction encoding');
         return { code: 1, log: 'Invalid transaction encoding' }
       }
     },
