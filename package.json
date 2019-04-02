@@ -16,7 +16,7 @@
     "debug": "^4.1.1",
     "deterministic-json": "^1.0.5",
     "fs-extra": "^7.0.1",
-    "get-port": "^4.0.0",
+    "get-port": "^3.2.0",
     "jpfs": "0.0.3",
     "lotion-connect": "^0.1.5",
     "lotion-state-machine": "^0.2.0",
